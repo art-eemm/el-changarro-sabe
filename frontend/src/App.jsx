@@ -2,6 +2,118 @@ import { useState, useRef, useEffect } from "react";
 
 const API_BASE = "http://localhost:8000";
 
+// SVG Icons components
+const Icons = {
+  Microphone: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+    </svg>
+  ),
+  Pause: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  Play: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  Stop: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 10h6v4H9z" />
+    </svg>
+  ),
+  Settings: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  Plus: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+    </svg>
+  ),
+  Trash: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    </svg>
+  ),
+  Volume2: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+    </svg>
+  ),
+  VolumeX: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zm10.414-4.586l2.828 2.828m0-2.828l-2.828 2.828" />
+    </svg>
+  ),
+  ArrowLeft: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+  ),
+  Sparkles: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+    </svg>
+  ),
+  TrendingUp: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+    </svg>
+  ),
+  TrendingDown: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6" />
+    </svg>
+  ),
+  Calendar: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 3V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  ),
+  ChevronDown: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  ),
+  AlertCircle: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+  ),
+  Edit: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+    </svg>
+  ),
+  Text: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+    </svg>
+  ),
+  Refresh: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17" />
+    </svg>
+  ),
+  Close: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  ),
+  Info: ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} width="24" height="24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  )
+};
+
 export default function App() {
   const [fase, setFase] = useState("inicio"); // inicio | grabando | procesando | resumen
   const [resultado, setResultado] = useState(null);
@@ -599,28 +711,25 @@ export default function App() {
   };
 
   return (
-    <main className="app-container">
+    <main className={`app-container ${!onboardingCompletado ? "onboarding-mode" : ""} ${isEditingMenu ? "editor-mode" : ""}`}>
       {/* Invisible HTML5 Audio element for demo playback */}
       <audio ref={audioPlaybackRef} style={{ display: "none" }} controls />
 
       {/* Main Ledger Header */}
       <header className="ledger-header">
-        <div className="decor-spiral"></div>
         <div className="header-titles">
           <h1>El Changarro Sabe</h1>
-          <p className="subtitle">Libreta de cuentas por voz · Inteligencia local</p>
+          <p className="subtitle">Libreta de cuentas por voz con inteligencia local</p>
         </div>
       </header>
 
       <section className="ledger-page">
-        {/* Red Margin Line characteristic of classic accounting ledgers */}
-        <div className="ledger-margin-line"></div>
-
         <div className="ledger-content">
           
           {errorText && (
             <div className="alert-message error">
-              <span>⚠️</span> {errorText}
+              <Icons.AlertCircle className="icon-alert" />
+              <span>{errorText}</span>
             </div>
           )}
 
@@ -635,7 +744,10 @@ export default function App() {
                 <>
                   <div className="onboarding-choice-container">
                     <button className="choice-card" onClick={() => iniciarGrabacion("config")}>
-                      <div className="choice-header">🎤 Configurar por voz</div>
+                      <div className="choice-header">
+                        <Icons.Microphone className="choice-icon" />
+                        <span>Configurar por voz</span>
+                      </div>
                       <div className="choice-desc">
                         Graba un audio diciendo tus productos y precios. Ej: <em>"Vendo tacos de guisado a 13 pesos"</em>.
                       </div>
@@ -648,7 +760,10 @@ export default function App() {
                         setOnboardingFase("formulario");
                       }}
                     >
-                      <div className="choice-header">✍️ Llenar formulario a mano</div>
+                      <div className="choice-header">
+                        <Icons.Edit className="choice-icon" />
+                        <span>Llenar formulario a mano</span>
+                      </div>
                       <div className="choice-desc">
                         Abre una tabla para escribir los nombres de tus productos y sus precios uno por uno.
                       </div>
@@ -657,7 +772,8 @@ export default function App() {
 
                   <div className="toggle-manual-entry">
                     <button className="btn-link" onClick={() => setMostrarConfigManual(!mostrarConfigManual)}>
-                      {mostrarConfigManual ? "Ocultar entrada de texto" : "⌨️ O escribir configuración en texto"}
+                      <Icons.Text className="icon-btn-inline" />
+                      <span>{mostrarConfigManual ? "Ocultar entrada de texto" : "Escribir configuración en texto"}</span>
                     </button>
                   </div>
 
@@ -680,7 +796,8 @@ export default function App() {
                   <div className="onboarding-demo-box">
                     <p>¿Solo quieres ver cómo funciona la app?</p>
                     <button className="btn-secondary" onClick={usarMenuDemo}>
-                      🍔 Cargar negocio de prueba (Tacos "El Salto")
+                      <Icons.Info className="icon-btn-inline" />
+                      <span>Cargar negocio de prueba (Tacos "El Salto")</span>
                     </button>
                   </div>
                 </>
@@ -689,10 +806,12 @@ export default function App() {
               {onboardingFase === "grabando_config" && (
                 <div className="recording-active">
                   <div className="pulse-container">
-                    <div className={`pulse-ring ring-1 ${isPaused ? 'paused' : ''}`}></div>
-                    <div className={`pulse-ring ring-2 ${isPaused ? 'paused' : ''}`}></div>
-                    <div className={`pulse-ring ring-3 ${isPaused ? 'paused' : ''}`}></div>
-                    <div className="pulse-microphone">{isPaused ? "⏸️" : "🎙️"}</div>
+                    <div className={`pulse-ring ring-1 ${isPaused ? "paused" : ""}`}></div>
+                    <div className={`pulse-ring ring-2 ${isPaused ? "paused" : ""}`}></div>
+                    <div className={`pulse-ring ring-3 ${isPaused ? "paused" : ""}`}></div>
+                    <div className="pulse-microphone">
+                      {isPaused ? <Icons.Pause className="mic-icon" /> : <Icons.Microphone className="mic-icon" />}
+                    </div>
                   </div>
                   <span className="timer">00:{tiempoGrabacion < 10 ? `0${tiempoGrabacion}` : tiempoGrabacion}</span>
                   <p className="pulse-sub">
@@ -704,15 +823,18 @@ export default function App() {
                   <div className="recording-controls">
                     {isPaused ? (
                       <button className="btn-pausar resume" onClick={reanudarGrabacion}>
-                        ▶️ Continuar
+                        <Icons.Play className="icon-btn-inline" />
+                        <span>Continuar</span>
                       </button>
                     ) : (
                       <button className="btn-pausar" onClick={pausarGrabacion}>
-                        ⏸️ Pausar
+                        <Icons.Pause className="icon-btn-inline" />
+                        <span>Pausar</span>
                       </button>
                     )}
                     <button className="btn-detener" onClick={detenerGrabacion}>
-                      ⏹️ Ya terminé
+                      <Icons.Stop className="icon-btn-inline" />
+                      <span>Ya terminé</span>
                     </button>
                   </div>
                 </div>
@@ -720,9 +842,8 @@ export default function App() {
 
               {onboardingFase === "procesando_config" && (
                 <div className="processing-widget">
-                  <div className="loader-anim">
-                    <div className="loader-pot">🥘</div>
-                    <div className="loader-smoke">💨</div>
+                  <div className="loader-container">
+                    <div className="loader-spinner"></div>
                   </div>
                   <h3>Configurando tu changarro...</h3>
                   <p>Estamos extrayendo tus productos y precios usando inteligencia artificial local.</p>
@@ -731,8 +852,8 @@ export default function App() {
 
               {onboardingFase === "formulario" && (
                 <div className="product-editor-section" style={{ marginTop: 0 }}>
-                  <h4>📋 Confirma tus Productos</h4>
-                  <p className="help-text" style={{ fontSize: "0.85rem", color: "var(--suave)", marginBottom: "1rem", lineHeight: "1.4" }}>
+                  <h4>Confirma tus Productos</h4>
+                  <p className="help-text" style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "1rem", lineHeight: "1.4" }}>
                     Edita los nombres o precios si es necesario, o agrega nuevos.
                   </p>
                   
@@ -741,7 +862,7 @@ export default function App() {
                       <tr>
                         <th>Producto</th>
                         <th>Precio</th>
-                        <th style={{ width: "30px" }}></th>
+                        <th style={{ width: "40px" }}></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -769,8 +890,8 @@ export default function App() {
                             </div>
                           </td>
                           <td>
-                            <button className="btn-remove-row" onClick={() => eliminarFilaMenu(idx)}>
-                              ❌
+                            <button className="btn-remove-row" onClick={() => eliminarFilaMenu(idx)} title="Eliminar producto">
+                              <Icons.Close className="icon-small" />
                             </button>
                           </td>
                         </tr>
@@ -780,13 +901,15 @@ export default function App() {
 
                   <div className="table-actions">
                     <button className="btn-add-row" onClick={agregarFilaMenu}>
-                      ➕ Agregar Producto
+                      <Icons.Plus className="icon-btn-inline" />
+                      <span>Agregar Producto</span>
                     </button>
                   </div>
 
                   <div className="btn-actions-footer">
                     <button className="btn-primary" onClick={guardarMenuOnboarding}>
-                      💾 Guardar y Empezar
+                      <Icons.Sparkles className="icon-btn-inline" />
+                      <span>Guardar y Empezar</span>
                     </button>
                     <button 
                       className="btn-link" 
@@ -803,8 +926,11 @@ export default function App() {
             </div>
           ) : isEditingMenu ? (
             <div className="product-editor-section" style={{ marginTop: 0 }}>
-              <h4>⚙️ Editar Productos del Changarro</h4>
-              <p className="help-text" style={{ fontSize: "0.85rem", color: "var(--suave)", marginBottom: "1rem", lineHeight: "1.4" }}>
+              <div className="title-with-icon">
+                <Icons.Settings className="title-icon" />
+                <h4>Editar Productos del Changarro</h4>
+              </div>
+              <p className="help-text" style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "1rem", lineHeight: "1.4" }}>
                 Modifica los precios o agrega nuevos productos. Estos cambios se aplicarán a los nuevos registros de ventas.
               </p>
               
@@ -813,7 +939,7 @@ export default function App() {
                   <tr>
                     <th>Producto</th>
                     <th>Precio</th>
-                    <th style={{ width: "30px" }}></th>
+                    <th style={{ width: "40px" }}></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -841,8 +967,8 @@ export default function App() {
                         </div>
                       </td>
                       <td>
-                        <button className="btn-remove-row" onClick={() => eliminarFilaMenu(idx)}>
-                          ❌
+                        <button className="btn-remove-row" onClick={() => eliminarFilaMenu(idx)} title="Eliminar producto">
+                          <Icons.Close className="icon-small" />
                         </button>
                       </td>
                     </tr>
@@ -852,13 +978,15 @@ export default function App() {
 
               <div className="table-actions">
                 <button className="btn-add-row" onClick={agregarFilaMenu}>
-                  ➕ Agregar Producto
+                  <Icons.Plus className="icon-btn-inline" />
+                  <span>Agregar Producto</span>
                 </button>
               </div>
 
               <div className="btn-actions-footer">
                 <button className="btn-primary" onClick={guardarEdicionMenu}>
-                  💾 Guardar Cambios
+                  <Icons.Sparkles className="icon-btn-inline" />
+                  <span>Guardar Cambios</span>
                 </button>
                 <button 
                   className="btn-link" 
@@ -872,320 +1000,331 @@ export default function App() {
               </div>
             </div>
           ) : (
-            <>
-              <div className="header-actions-top">
-                <button className="btn-config-menu" onClick={abrirEdicionMenu}>
-                  ⚙️ Mis Productos
-                </button>
-              </div>
-
-              {/* MAIN RECORDING CONTROL SECTION */}
-          {fase === "inicio" && (
-            <div className="recording-widget">
-              <p className="instruction-text">
-                Cuéntame cómo le fue a tu negocio al cerrar hoy (ventas, gastos o inventario). Te escucharé y sacaré las cuentas.
-              </p>
-
-              <button className="btn-grabar" onClick={iniciarGrabacion}>
-                <span className="icon">🎤</span> Grabar mi día
-              </button>
-
-              <div className="demo-section">
-                <h4>🎯 Pruebas con grabaciones de demo (Tacos "El Salto")</h4>
-                <p className="demo-help">Reproduce y envía audios programados de cierres de negocio reales:</p>
-                <div className="demo-buttons">
-                  <button className="btn-demo" onClick={() => probarConDemo(1)}>
-                    📁 Día 1 (Lunes)
-                  </button>
-                  <button className="btn-demo" onClick={() => probarConDemo(2)}>
-                    📁 Día 2 (Martes)
-                  </button>
-                  <button className="btn-demo" onClick={() => probarConDemo(3)}>
-                    📁 Día 3 (Miércoles)
-                  </button>
-                </div>
-              </div>
-
-              <div className="toggle-manual-entry">
-                <button className="btn-link" onClick={() => setMostrarManual(!mostrarManual)}>
-                  {mostrarManual ? "Ocultar entrada de texto" : "⌨️ O escribir texto manualmente"}
-                </button>
-              </div>
-
-              {mostrarManual && (
-                <div className="manual-entry-card">
-                  <div className="form-group">
-                    <label>Fecha de registro (opcional):</label>
-                    <input 
-                      type="date" 
-                      value={fechaManual} 
-                      onChange={(e) => setFechaManual(e.target.value)} 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Escribe lo que pasó hoy:</label>
-                    <textarea 
-                      placeholder='Ej: "Hoy vendí 10 tacos de mole y 5 de picadillo. Pagué 100 de tortillas y me sobró bastante guisado de rajas."' 
-                      value={textoManual}
-                      onChange={(e) => setTextoManual(e.target.value)}
-                    />
-                  </div>
-                  <button className="btn-primary" onClick={enviarTextoManual} disabled={!textoManual.trim()}>
-                    Enviar registro escrito
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* RECORDING IN PROGRESS ANIMATION */}
-          {fase === "grabando" && (
-            <div className="recording-active">
-              <div className="pulse-container">
-                <div className={`pulse-ring ring-1 ${isPaused ? 'paused' : ''}`}></div>
-                <div className={`pulse-ring ring-2 ${isPaused ? 'paused' : ''}`}></div>
-                <div className={`pulse-ring ring-3 ${isPaused ? 'paused' : ''}`}></div>
-                <div className="pulse-microphone">{isPaused ? "⏸️" : "🎙️"}</div>
-              </div>
-              <span className="timer">00:{tiempoGrabacion < 10 ? `0${tiempoGrabacion}` : tiempoGrabacion}</span>
-              <p className="pulse-sub">
-                {isPaused ? "Grabación pausada... cuando gustes puedes continuar." : "Te estoy escuchando... Habla naturalmente de tus ventas y gastos."}
-              </p>
-              <div className="recording-controls">
-                {isPaused ? (
-                  <button className="btn-pausar resume" onClick={reanudarGrabacion}>
-                    ▶️ Continuar
-                  </button>
-                ) : (
-                  <button className="btn-pausar" onClick={pausarGrabacion}>
-                    ⏸️ Pausar
-                  </button>
-                )}
-                <button className="btn-detener" onClick={detenerGrabacion}>
-                  ⏹️ Ya terminé
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* LOADING AND COMPUTING STATE */}
-          {fase === "procesando" && (
-            <div className="processing-widget">
-              <div className="loader-anim">
-                <div className="loader-pot">🥘</div>
-                <div className="loader-smoke">💨</div>
-              </div>
-              <h3>Haciendo cuentas...</h3>
-              <p>Whisper está transcribiendo y Gemma 4 está extrayendo tus datos contables de forma local.</p>
-            </div>
-          )}
-
-          {/* DAILY ACCOUNT RECEIPT RESULT */}
-          {fase === "resumen" && resultado && (
-            <div className="receipt-card">
-              <div className="receipt-header">
-                <span className="receipt-stamp">EL CHANGARRO SABE</span>
-                <span className="receipt-date">{formatearFecha(resultado.fecha)}</span>
-              </div>
+            <div className="dashboard-grid">
               
-              <div className="receipt-divider"></div>
-
-              {/* Salsa green daily profit calculated strictly by Python */}
-              <div className="receipt-profit-box">
-                <span className="profit-title">GANANCIA DEL DÍA</span>
-                <span className={`profit-amount ${resultado.consolidado.ganancia_dia >= 0 ? 'pos' : 'neg'}`}>
-                  ${resultado.consolidado.ganancia_dia.toLocaleString("es-MX", { minimumFractionDigits: 2 })}
-                </span>
-                <span className="currency">pesos mexicanos (MXN)</span>
-              </div>
-
-              <div className="receipt-divider"></div>
-
-              {/* Itemized sales extracted by Gemma */}
-              <div className="receipt-details">
-                <div className="receipt-section">
-                  <h5>📝 Ventas registradas</h5>
-                  {resultado.registros_extraidos.ventas.length === 0 ? (
-                    <p className="empty-text">No se registraron ventas en este audio.</p>
-                  ) : (
-                    <ul className="receipt-list">
-                      {resultado.registros_extraidos.ventas.map((v, i) => (
-                        <li key={i}>
-                          <span className="item-name">🏷️ {v.producto.charAt(0).toUpperCase() + v.producto.slice(1)}</span>
-                          <span className="item-calc">{v.cantidad} x ${v.precio_unitario}</span>
-                          <span className="item-total">${(v.cantidad * v.precio_unitario).toFixed(2)}</span>
-                          {v.es_estimado && <span className="item-badge">estimado</span>}
-                        </li>
-                      ))}
-                      <li className="section-total">
-                        <span>Total Ventas:</span>
-                        <span>${resultado.consolidado.total_ventas.toFixed(2)}</span>
-                      </li>
-                    </ul>
-                  )}
+              <div className="dashboard-main-col">
+                <div className="header-actions-top">
+                  <button className="btn-config-menu" onClick={abrirEdicionMenu}>
+                    <Icons.Settings className="icon-btn-inline" />
+                    <span>Mis Productos</span>
+                  </button>
                 </div>
 
-                <div className="receipt-section">
-                  <h5>💸 Gastos registrados</h5>
-                  {resultado.registros_extraidos.gastos.length === 0 ? (
-                    <p className="empty-text">No se registraron gastos hoy.</p>
-                  ) : (
-                    <ul className="receipt-list">
-                      {resultado.registros_extraidos.gastos.map((g, i) => (
-                        <li key={i}>
-                          <span className="item-name">💰 {g.concepto}</span>
-                          <span className="item-total">-${g.monto.toFixed(2)}</span>
-                        </li>
-                      ))}
-                      <li className="section-total">
-                        <span>Total Gastos:</span>
-                        <span>-${resultado.consolidado.total_gastos.toFixed(2)}</span>
-                      </li>
-                    </ul>
-                  )}
-                </div>
+                {/* MAIN RECORDING CONTROL SECTION */}
+                {fase === "inicio" && (
+                  <div className="recording-widget">
+                    <p className="instruction-text">
+                      Cuéntame cómo le fue a tu negocio al cerrar hoy (ventas, gastos o inventario). Te escucharé y sacaré las cuentas.
+                    </p>
 
-                {resultado.registros_extraidos.notas_inventario.length > 0 && (
-                  <div className="receipt-section">
-                    <h5>📦 Notas de Inventario</h5>
-                    <ul className="receipt-notes">
-                      {resultado.registros_extraidos.notas_inventario.map((n, i) => (
-                        <li key={i} className={`note-item ${n.tipo}`}>
-                          <strong>{n.producto}:</strong> {n.tipo === 'se_acabo' ? '🔴 ¡Se acabó todo!' : '🟢 Sobró'} ({n.cantidad_aproximada})
-                        </li>
-                      ))}
-                    </ul>
+                    <button className="btn-grabar" onClick={iniciarGrabacion}>
+                      <Icons.Microphone className="icon" />
+                      <span>Grabar mi día</span>
+                    </button>
+
+                    <div className="toggle-manual-entry">
+                      <button className="btn-link" onClick={() => setMostrarManual(!mostrarManual)}>
+                        <Icons.Text className="icon-btn-inline" />
+                        <span>{mostrarManual ? "Ocultar entrada de texto" : "Escribir texto manualmente"}</span>
+                      </button>
+                    </div>
+
+                    {mostrarManual && (
+                      <div className="manual-entry-card">
+                        <div className="form-group">
+                          <label>Fecha de registro (opcional):</label>
+                          <input 
+                            type="date" 
+                            value={fechaManual} 
+                            onChange={(e) => setFechaManual(e.target.value)} 
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Escribe lo que pasó hoy:</label>
+                          <textarea 
+                            placeholder='Ej: "Hoy vendí 10 tacos de mole y 5 de picadillo. Pagué 100 de tortillas y me sobró bastante guisado de rajas."' 
+                            value={textoManual}
+                            onChange={(e) => setTextoManual(e.target.value)}
+                          />
+                        </div>
+                        <button className="btn-primary" onClick={enviarTextoManual} disabled={!textoManual.trim()}>
+                          Enviar registro escrito
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
-              </div>
 
-              <div className="receipt-divider"></div>
+                {/* RECORDING IN PROGRESS ANIMATION */}
+                {fase === "grabando" && (
+                  <div className="recording-active">
+                    <div className="pulse-container">
+                      <div className={`pulse-ring ring-1 ${isPaused ? "paused" : ""}`}></div>
+                      <div className={`pulse-ring ring-2 ${isPaused ? "paused" : ""}`}></div>
+                      <div className={`pulse-ring ring-3 ${isPaused ? "paused" : ""}`}></div>
+                      <div className="pulse-microphone">
+                        {isPaused ? <Icons.Pause className="mic-icon" /> : <Icons.Microphone className="mic-icon" />}
+                      </div>
+                    </div>
+                    <span className="timer">00:{tiempoGrabacion < 10 ? `0${tiempoGrabacion}` : tiempoGrabacion}</span>
+                    <p className="pulse-sub">
+                      {isPaused ? "Grabación pausada... cuando gustes puedes continuar." : "Te estoy escuchando... Habla naturalmente de tus ventas y gastos."}
+                    </p>
+                    <div className="recording-controls">
+                      {isPaused ? (
+                        <button className="btn-pausar resume" onClick={reanudarGrabacion}>
+                          <Icons.Play className="icon-btn-inline" />
+                          <span>Continuar</span>
+                        </button>
+                      ) : (
+                        <button className="btn-pausar" onClick={pausarGrabacion}>
+                          <Icons.Pause className="icon-btn-inline" />
+                          <span>Pausar</span>
+                        </button>
+                      )}
+                      <button className="btn-detener" onClick={detenerGrabacion}>
+                        <Icons.Stop className="icon-btn-inline" />
+                        <span>Ya terminé</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
 
-              {/* Friendly narration by Gemma */}
-              <div className="narrative-box">
-                <span className="narrative-quote-icon">“</span>
-                <p className="narrative-text">{resultado.resumen}</p>
-                <button 
-                  className={`btn-voz ${reproduciendoVoz ? 'activo' : ''}`} 
-                  onClick={() => hablarTexto(resultado.resumen)}
-                  title={reproduciendoVoz ? "Detener voz" : "Escuchar en voz alta"}
-                >
-                  {reproduciendoVoz ? "⏹️ Detener voz" : "🔊 Leer en voz alta"}
-                </button>
-              </div>
+                {/* LOADING AND COMPUTING STATE */}
+                {fase === "procesando" && (
+                  <div className="processing-widget">
+                    <div className="loader-container">
+                      <div className="loader-spinner"></div>
+                    </div>
+                    <h3>Haciendo cuentas...</h3>
+                    <p>Whisper está transcribiendo y Gemma está extrayendo tus datos contables de forma local.</p>
+                  </div>
+                )}
 
-              <div className="receipt-divider"></div>
-
-              <details className="raw-audio-details">
-                <summary>🔍 Ver transcripción cruda del audio</summary>
-                <div className="raw-transcription">
-                  "{resultado.transcripcion}"
-                </div>
-              </details>
-
-              <button 
-                className="btn-primary" 
-                onClick={() => {
-                  if ("speechSynthesis" in window) {
-                    window.speechSynthesis.cancel();
-                    setReproduciendoVoz(false);
-                  }
-                  setFase("inicio");
-                }}
-              >
-                ⬅️ Registrar otro día
-              </button>
-            </div>
-          )}
-
-          {/* WEEKLY INSIGHTS OR PATTERNS SECTION */}
-          <section className="insights-container">
-            <div className="section-header-box">
-              <h3>📊 Mi Libreta Semanal</h3>
-              <p>Analiza el comportamiento acumulado de los últimos 7 días con contexto de 256K tokens.</p>
-            </div>
-
-            {loadingInsights ? (
-              <div className="insights-loading">
-                <span className="insights-spinner">🍳</span>
-                <p>Gemma 4 está revisando tus notas de la semana...</p>
-              </div>
-            ) : insights ? (
-              <div className="insights-paper-card">
-                <div className="insights-torn-edge"></div>
-                <h4>💡 Consejos del Changarro</h4>
-                <p className="insights-content-text">{insights}</p>
-                <button className="btn-outline-small" onClick={verInsightsSemana}>
-                  🔄 Actualizar análisis
-                </button>
-              </div>
-            ) : (
-              <div className="insights-placeholder">
-                <p>¿Quieres ver los patrones de venta de tu semana y recomendaciones personalizadas?</p>
-                <div className="insights-placeholder-actions">
-                  <button className="btn-secondary" onClick={verInsightsSemana}>
-                    Calcular insights semanales
-                  </button>
-                  <button className="btn-outline" onClick={precargarHistorialDemo}>
-                    Precargar historial de demo + analizar
-                  </button>
-                </div>
-              </div>
-            )}
-          </section>
-
-          {/* ACCOUNT HISTORICAL TIMELINE */}
-          {historial.length > 0 && (
-            <section className="history-container">
-              <h3>📔 Registro de Cuentas Pasadas</h3>
-              <div className="history-timeline">
-                {historial.map((dia) => (
-                  <div key={dia.id} className="history-item-card">
-                    <div className="history-meta">
-                      <span className="history-date">{formatearFecha(dia.fecha)}</span>
-                      <span className={`history-profit ${dia.ganancia_dia >= 0 ? 'pos' : 'neg'}`}>
-                        ${dia.ganancia_dia.toFixed(2)}
+                {/* DAILY ACCOUNT RECEIPT RESULT */}
+                {fase === "resumen" && resultado && (
+                  <div className="receipt-card">
+                    <div className="receipt-header">
+                      <span className="receipt-stamp">EL CHANGARRO SABE</span>
+                      <span className="receipt-date">
+                        <Icons.Calendar className="icon-inline" />
+                        {formatearFecha(resultado.fecha)}
                       </span>
                     </div>
-                    <p className="history-summary">{dia.resumen_narrado}</p>
-                    <details className="history-details">
-                      <summary>Detalles del día</summary>
-                      <div className="details-expanded">
-                        <p className="history-trans"><strong>Escuché:</strong> "{dia.transcripcion}"</p>
-                        <div className="details-columns">
-                          <div>
-                            <strong>Ventas ({dia.ventas.length}):</strong>
-                            <ul>
-                              {dia.ventas.map((v, idx) => (
-                                <li key={idx}>{v.producto.charAt(0).toUpperCase() + v.producto.slice(1)} x{v.cantidad} (${(v.cantidad * v.precio_unitario).toFixed(2)})</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div>
-                            <strong>Gastos ({dia.gastos.length}):</strong>
-                            <ul>
-                              {dia.gastos.map((g, idx) => (
-                                <li key={idx}>{g.concepto}: -${g.monto.toFixed(2)}</li>
-                              ))}
-                            </ul>
-                          </div>
+                    
+                    <div className="receipt-divider"></div>
+
+                    <div className="receipt-profit-box">
+                      <span className="profit-title">GANANCIA DEL DÍA</span>
+                      <span className={`profit-amount ${resultado.consolidado.ganancia_dia >= 0 ? "pos" : "neg"}`}>
+                        ${resultado.consolidado.ganancia_dia.toLocaleString("es-MX", { minimumFractionDigits: 2 })}
+                      </span>
+                      <span className="currency">pesos mexicanos (MXN)</span>
+                    </div>
+
+                    <div className="receipt-divider"></div>
+
+                    <div className="receipt-details">
+                      <div className="receipt-section">
+                        <h5>Ventas registradas</h5>
+                        {resultado.registros_extraidos.ventas.length === 0 ? (
+                          <p className="empty-text">No se registraron ventas en este audio.</p>
+                        ) : (
+                          <ul className="receipt-list">
+                            {resultado.registros_extraidos.ventas.map((v, i) => (
+                              <li key={i}>
+                                <span className="item-name">{v.producto.charAt(0).toUpperCase() + v.producto.slice(1)}</span>
+                                <span className="item-calc">{v.amount || v.cantidad} x ${v.precio_unitario}</span>
+                                <span className="item-total">${((v.amount || v.cantidad) * v.precio_unitario).toFixed(2)}</span>
+                                {v.es_estimado && <span className="item-badge">estimado</span>}
+                              </li>
+                            ))}
+                            <li className="section-total">
+                              <span>Total Ventas:</span>
+                              <span>${resultado.consolidado.total_ventas.toFixed(2)}</span>
+                            </li>
+                          </ul>
+                        )}
+                      </div>
+
+                      <div className="receipt-section">
+                        <h5>Gastos registrados</h5>
+                        {resultado.registros_extraidos.gastos.length === 0 ? (
+                          <p className="empty-text">No se registraron gastos hoy.</p>
+                        ) : (
+                          <ul className="receipt-list">
+                            {resultado.registros_extraidos.gastos.map((g, i) => (
+                              <li key={i}>
+                                <span className="item-name">{g.concepto}</span>
+                                <span className="item-total">-${g.monto.toFixed(2)}</span>
+                              </li>
+                            ))}
+                            <li className="section-total">
+                              <span>Total Gastos:</span>
+                              <span>-${resultado.consolidado.total_gastos.toFixed(2)}</span>
+                            </li>
+                          </ul>
+                        )}
+                      </div>
+
+                      {resultado.registros_extraidos.notas_inventario.length > 0 && (
+                        <div className="receipt-section">
+                          <h5>Notas de Inventario</h5>
+                          <ul className="receipt-notes">
+                            {resultado.registros_extraidos.notas_inventario.map((n, i) => (
+                              <li key={i} className={`note-item ${n.tipo}`}>
+                                <span className={`status-dot ${n.tipo === "se_acabo" ? "out-of-stock" : "in-stock"}`}></span>
+                                <strong>{n.producto}:</strong> {n.tipo === "se_acabo" ? "Se acabó todo" : "Sobró"} ({n.cantidad_aproximada})
+                              </li>
+                            ))}
+                          </ul>
                         </div>
+                      )}
+                    </div>
+
+                    <div className="receipt-divider"></div>
+
+                    <div className="narrative-box">
+                      <span className="narrative-quote-icon">“</span>
+                      <p className="narrative-text">{resultado.resumen}</p>
+                      <button 
+                        className={`btn-voz ${reproduciendoVoz ? "activo" : ""}`} 
+                        onClick={() => hablarTexto(resultado.resumen)}
+                        title={reproduciendoVoz ? "Detener voz" : "Escuchar en voz alta"}
+                      >
+                        {reproduciendoVoz ? <Icons.VolumeX className="icon-btn-inline" /> : <Icons.Volume2 className="icon-btn-inline" />}
+                        <span>{reproduciendoVoz ? "Detener voz" : "Leer en voz alta"}</span>
+                      </button>
+                    </div>
+
+                    <div className="receipt-divider"></div>
+
+                    <details className="raw-audio-details">
+                      <summary>Ver transcripción cruda del audio</summary>
+                      <div className="raw-transcription">
+                        "{resultado.transcripcion}"
                       </div>
                     </details>
+
+                    <button 
+                      className="btn-primary" 
+                      onClick={() => {
+                        if ("speechSynthesis" in window) {
+                          window.speechSynthesis.cancel();
+                          setReproduciendoVoz(false);
+                        }
+                        setFase("inicio");
+                      }}
+                    >
+                      <Icons.ArrowLeft className="icon-btn-inline" />
+                      <span>Registrar otro día</span>
+                    </button>
                   </div>
-                ))}
+                )}
+
+                {/* DANGEROUS ZONE: CLEAR DATA */}
+                <footer className="ledger-footer-actions">
+                  <button className="btn-danger" onClick={limpiarBaseDatos}>
+                    <Icons.Trash className="icon-btn-inline" />
+                    <span>Limpiar Libreta de Cuentas</span>
+                  </button>
+                </footer>
               </div>
-            </section>
-          )}
 
-          {/* DANGEROUS ZONE: CLEAR DATA */}
-          <footer className="ledger-footer-actions">
-            <button className="btn-danger" onClick={limpiarBaseDatos}>
-              🗑️ Limpiar Libreta de Cuentas
-            </button>
-          </footer>
+              <div className="dashboard-side-col">
+                {/* WEEKLY INSIGHTS OR PATTERNS SECTION */}
+                <section className="insights-container">
+                  <div className="section-header-box">
+                    <div className="title-with-icon">
+                      <Icons.Sparkles className="title-icon" />
+                      <h3>Mi Libreta Semanal</h3>
+                    </div>
+                    <p>Recomendaciones y análisis acumulado de los últimos 7 días.</p>
+                  </div>
 
-            </>
+                  {loadingInsights ? (
+                    <div className="insights-loading">
+                      <div className="loader-spinner"></div>
+                      <p>Gemma está revisando tus notas de la semana...</p>
+                    </div>
+                  ) : insights ? (
+                    <div className="insights-paper-card">
+                      <div className="title-with-icon">
+                        <Icons.Info className="title-icon-small" />
+                        <h4>Consejos del Changarro</h4>
+                      </div>
+                      <p className="insights-content-text">{insights}</p>
+                      <button className="btn-outline-small" onClick={verInsightsSemana}>
+                        <Icons.Refresh className="icon-btn-inline" />
+                        <span>Actualizar análisis</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="insights-placeholder">
+                      <p>¿Quieres ver los patrones de venta de tu semana y recomendaciones personalizadas?</p>
+                      <div className="insights-placeholder-actions">
+                        <button className="btn-secondary" onClick={verInsightsSemana}>
+                          Calcular insights semanales
+                        </button>
+                        <button className="btn-outline" onClick={precargarHistorialDemo}>
+                          Precargar historial de demo + analizar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </section>
+
+                {/* ACCOUNT HISTORICAL TIMELINE */}
+                {historial.length > 0 && (
+                  <section className="history-container">
+                    <div className="title-with-icon">
+                      <Icons.Calendar className="title-icon" />
+                      <h3>Registro de Cuentas Pasadas</h3>
+                    </div>
+                    <div className="history-timeline">
+                      {historial.map((dia) => (
+                        <div key={dia.id} className="history-item-card">
+                          <div className="history-meta">
+                            <span className="history-date">{formatearFecha(dia.fecha)}</span>
+                            <span className={`history-profit ${dia.ganancia_dia >= 0 ? "pos" : "neg"}`}>
+                              ${dia.ganancia_dia.toFixed(2)}
+                            </span>
+                          </div>
+                          <p className="history-summary">{dia.resumen_narrado}</p>
+                          <details className="history-details">
+                            <summary>Detalles del día</summary>
+                            <div className="details-expanded">
+                              <p className="history-trans"><strong>Escuché:</strong> "{dia.transcripcion}"</p>
+                              <div className="details-columns">
+                                <div>
+                                  <strong>Ventas ({dia.ventas.length}):</strong>
+                                  <ul>
+                                    {dia.ventas.map((v, idx) => (
+                                      <li key={idx}>
+                                        {v.producto.charAt(0).toUpperCase() + v.producto.slice(1)} x{v.cantidad} (${(v.cantidad * v.precio_unitario).toFixed(2)})
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <div>
+                                  <strong>Gastos ({dia.gastos.length}):</strong>
+                                  <ul>
+                                    {dia.gastos.map((g, idx) => (
+                                      <li key={idx}>{g.concepto}: -${g.monto.toFixed(2)}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          </details>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                )}
+              </div>
+
+            </div>
           )}
 
         </div>
