@@ -1,0 +1,33 @@
+# Virtual Environment
+backend/venv/
+backend/.venv/
+venv/
+.venv/
+ENV/
+
+# Python cache
+**/__pycache__/
+*.pyc
+
+# Local SQLite databases
+backend/changarro.db
+*.db
+*.sqlite3
+
+# Temp files
+backend/temp_audios/
+**/temp_audios/
+**/temp_menu_*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node dependencies
+frontend/node_modules/
+**/node_modules/
+
+# Frontend local env files & build dists
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
